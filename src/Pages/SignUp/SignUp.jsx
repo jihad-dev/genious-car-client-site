@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import login from "../../assets/images/login/login.svg";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 const SignUp = () => {
-  const {createUser} = useContext(AuthContext);
+  const {createUser,GoogleSignIn} = useContext(AuthContext);
   const [loginError, setLoginError] = useState();
   
     const handleSignUp = event =>{
@@ -22,6 +22,13 @@ const SignUp = () => {
         .catch(err =>{
           console.log(err)
         })
+    }
+
+
+    const handleGoogleSignIn = () =>{
+      GoogleSignIn()
+      .then(() =>{})
+      .catch(err =>{})
     }
   return (
     <div className="grid gap-24 lg:grid-cols-2 lg:p-12 m-6">
@@ -77,10 +84,10 @@ const SignUp = () => {
           <Link className="p-5 bg-slate-500 rounded-full">
             <FaFacebook className="text-2xl"></FaFacebook>
           </Link>
-          <Link className="p-5 bg-slate-500 rounded-full">
+          <Link  onClick={handleGoogleSignIn} className="p-5 bg-slate-500 rounded-full">
             <FaGoogle className="text-2xl"></FaGoogle>
           </Link>
-          <Link className="p-5 bg-slate-500 rounded-full">
+          <Link  className="p-5 bg-slate-500 rounded-full">
             <FaInstagram className="text-2xl"></FaInstagram>
           </Link>
         </div>

@@ -4,7 +4,7 @@ import { FaFacebook, FaInstagram, FaGoogle } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 const Login = () => {
-  const {signIn} = useContext(AuthContext);
+  const {signIn,GoogleSignIn} = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogin = (event) => {
     event.preventDefault();
@@ -23,6 +23,14 @@ const Login = () => {
     })
    
   };
+
+  const handleGoogleLogin = () =>{
+    GoogleSignIn()
+    .then(() =>{
+      navigate('/');
+    })
+    .catch(error =>{console.log(error)})
+  }
   return (
     <div className="grid gap-24 lg:grid-cols-2 lg:p-12 m-6">
       <div className=" px-14  border  border-sky-600">
@@ -68,7 +76,7 @@ const Login = () => {
           <Link className="p-5 bg-slate-500 rounded-full">
             <FaFacebook className="text-2xl"></FaFacebook>
           </Link>
-          <Link className="p-5 bg-slate-500 rounded-full">
+          <Link onClick={handleGoogleLogin} className="p-5 bg-slate-500 rounded-full">
             <FaGoogle className="text-2xl"></FaGoogle>
           </Link>
           <Link className="p-5 bg-slate-500 rounded-full">

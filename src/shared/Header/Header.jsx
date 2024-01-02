@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
 import logo from "../../assets/logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 const Header = () => {
+
   const { user ,LogOut} = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleLogOut = () =>{
     LogOut()
-    .then(()=>{})
+    .then(()=>{
+      navigate('/login');
+    })
     .catch(()=>{});
   }
   const menuItems = (
@@ -17,10 +21,16 @@ const Header = () => {
       <li>
         <Link to="/about">About</Link>
       </li>
+     
       {user ? (
-        <li>
+       <div className="flex">
+         <li>
+         <Link to="/orders">Orders</Link>
+       </li>
+         <li>
           <Link onClick={handleLogOut}>sign out</Link>
         </li>
+       </div>
       ) : (
         <li>
           <Link to="/login">Login</Link>

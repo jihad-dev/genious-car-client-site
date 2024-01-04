@@ -21,7 +21,7 @@ const Orders = () => {
       })
       .then((data) => {
         console.log('response',data);
-        // setOrders(data)
+        setOrders(data)
       });
   }, [user?.email]);
 

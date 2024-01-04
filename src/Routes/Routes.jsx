@@ -1,4 +1,5 @@
 import Checkout from "../Pages/Checkout/Checkout";
+import Error from "../Pages/Error/Error";
 import About from "../Pages/Home/About/About";
 import Home from "../Pages/Home/Home/Home";
 import Login from "../Pages/Login/Login";
@@ -46,5 +47,9 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:'*',
+    element:<Error></Error>
+  }
 ]);
 export default router;

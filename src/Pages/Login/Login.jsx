@@ -3,6 +3,8 @@ import login from "../../assets/images/login/login.svg";
 import { FaFacebook, FaInstagram, FaGoogle } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import SocialLogin from "../../shared/SocialLogin/SocialLogin";
+import { setAuthToken } from "../../Utils/auth";
 const Login = () => {
   const { signIn, GoogleSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -16,25 +18,7 @@ const Login = () => {
     signIn(email, password)
       .then((result) => {
         const user = result.user;
-        const currentUser = {
-          email: user?.email,
-        };
-        console.log(currentUser);
-
-        // get jwt token
-
-        fetch("http://localhost:5000/jwt", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(currentUser),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            localStorage.setItem('token', data.token);
-          });
+        setAuthToken(user);
 
         alert("success sign-in");
         navigate(from, { replace: true });
@@ -44,15 +28,6 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = () => {
-    GoogleSignIn()
-      .then(() => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   return (
     <div className="grid gap-24 lg:grid-cols-2 lg:p-12 m-6">
       <div className=" px-14  border  border-sky-600">
@@ -93,20 +68,7 @@ const Login = () => {
           <button className="btn btn-primary">Login</button>
         </div>
         <div className="divider">OR</div>
-        <div className="flex justify-center mb-5 gap-4">
-          <Link className="p-5 bg-slate-500 rounded-full">
-            <FaFacebook className="text-2xl"></FaFacebook>
-          </Link>
-          <Link
-            onClick={handleGoogleLogin}
-            className="p-5 bg-slate-500 rounded-full"
-          >
-            <FaGoogle className="text-2xl"></FaGoogle>
-          </Link>
-          <Link className="p-5 bg-slate-500 rounded-full">
-            <FaInstagram className="text-2xl"></FaInstagram>
-          </Link>
-        </div>
+        <SocialLogin />
         <p className="text-center text-xl">
           Have an account?{" "}
           <Link className="text-orange-700" to="/signUp">

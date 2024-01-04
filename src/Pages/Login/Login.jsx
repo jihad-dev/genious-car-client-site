@@ -1,36 +1,58 @@
 import React, { useContext } from "react";
 import login from "../../assets/images/login/login.svg";
 import { FaFacebook, FaInstagram, FaGoogle } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 const Login = () => {
-  const {signIn,GoogleSignIn} = useContext(AuthContext);
+  const { signIn, GoogleSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
     signIn(email, password)
-    .then(result =>{
-      const user = result.user;
-      console.log(user)
-      alert('success sign-in')
-      navigate('/');
-    })
-    .catch(error =>{
-      console.log(error);
-    })
-   
+      .then((result) => {
+        const user = result.user;
+        const currentUser = {
+          email: user?.email,
+        };
+        console.log(currentUser);
+
+        // get jwt token
+
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(currentUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem('token', data.token);
+          });
+
+        alert("success sign-in");
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const handleGoogleLogin = () =>{
+  const handleGoogleLogin = () => {
     GoogleSignIn()
-    .then(() =>{
-      navigate('/');
-    })
-    .catch(error =>{console.log(error)})
-  }
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="grid gap-24 lg:grid-cols-2 lg:p-12 m-6">
       <div className=" px-14  border  border-sky-600">
@@ -58,14 +80,13 @@ const Login = () => {
           <input
             type="password"
             name="password"
+            autoComplete="password"
             placeholder="Enter Your password"
             className="input input-bordered"
             required
           />
           <label className="label">
-            <a href="#" className="label-text-alt link link-hover">
-              Forgot password?
-            </a>
+            <a className="label-text-alt link link-hover">Forgot password?</a>
           </label>
         </div>
         <div className="form-control mt-6">
@@ -76,7 +97,10 @@ const Login = () => {
           <Link className="p-5 bg-slate-500 rounded-full">
             <FaFacebook className="text-2xl"></FaFacebook>
           </Link>
-          <Link onClick={handleGoogleLogin} className="p-5 bg-slate-500 rounded-full">
+          <Link
+            onClick={handleGoogleLogin}
+            className="p-5 bg-slate-500 rounded-full"
+          >
             <FaGoogle className="text-2xl"></FaGoogle>
           </Link>
           <Link className="p-5 bg-slate-500 rounded-full">
@@ -84,7 +108,10 @@ const Login = () => {
           </Link>
         </div>
         <p className="text-center text-xl">
-          Have an account? <Link className="text-orange-700" to="/signUp">Sign In</Link>
+          Have an account?{" "}
+          <Link className="text-orange-700" to="/signUp">
+            Sign In
+          </Link>
         </p>
       </form>
     </div>

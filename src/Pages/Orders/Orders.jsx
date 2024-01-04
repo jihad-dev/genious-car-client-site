@@ -3,14 +3,26 @@ import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 import OrderTable from "./OrderTable";
 
 const Orders = () => {
-  const { user } = useContext(AuthContext);
+  const { user ,LogOut} = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   console.log(orders);
 
   useEffect(() => {
-    fetch(`https://genious-car-server-one.vercel.app/orders?email=${user?.email}`)
-      .then((res) => res.json())
-      .then((data) => setOrders(data));
+    fetch(`http://localhost:5000/orders?email=${user?.email}`,{
+      headers:{
+        authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then((res) => {
+        if(res.status === 401 || res.status === 403){
+          LogOut()
+        }
+       return res.json()
+      })
+      .then((data) => {
+        console.log('response',data);
+        // setOrders(data)
+      });
   }, [user?.email]);
 
   // handleDelete
@@ -20,7 +32,7 @@ const Orders = () => {
       "Are you sure you want to delete this order?"
     );
     if (proceed) {
-      fetch(`https://genious-car-server-one.vercel.app/orders/${id}`,{
+      fetch(`http://localhost:5000/orders/${id}`,{
         method: 'DELETE',
       })
         .then((res) => res.json())

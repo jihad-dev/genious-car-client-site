@@ -6,7 +6,7 @@ const OrderTable = ({ order ,handleDelete}) => {
   const { service, phone, price, serviceName, customer, email,_id } = order;
 
   useEffect(() => {
-    fetch(`https://genious-car-server-one.vercel.app/services/${service}`)
+    fetch(`http://localhost:5000/services/${service}`)
       .then((res) => res.json())
       .then((data) => setServiceImg(data));
   }, [service]);

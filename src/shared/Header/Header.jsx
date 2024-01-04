@@ -21,16 +21,16 @@ const Header = () => {
       <li>
         <Link to="/about">About</Link>
       </li>
-     
-      {user ? (
-       <div className="flex">
-         <li>
+      <li>
          <Link to="/orders">Orders</Link>
        </li>
+      {user ? (
+       
+        
          <li>
           <Link onClick={handleLogOut}>sign out</Link>
         </li>
-       </div>
+      
       ) : (
         <li>
           <Link to="/login">Login</Link>
